@@ -1,0 +1,13 @@
+.gradle/
+.gradle-user-home/
+.android-user-home/
+.tmp/
+.kotlin/
+local.properties
+**/build/
+*.apk
+*.iml
+.idea/
+captures/
+*.png
+!app/src/main/res/drawable-nodpi/*.png
