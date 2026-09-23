@@ -111,7 +111,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
         ) {
             val xScale = screenWidth.value / DESIGN_WIDTH
             val yScale = safeHeight.value / DESIGN_HEIGHT
-            val scale = minOf(xScale, yScale)
+            val scale = xScale
             fun ux(value: Float): Dp = (value * xScale).dp
             fun uy(value: Float): Dp = (value * yScale).dp
 
@@ -131,13 +131,13 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
             query = query,
             onQuery = { query = it },
             scale = scale,
-            modifier = Modifier.offset(ux(86f), uy(240f)).size(ux(934f), uy(90f))
+            modifier = Modifier.offset(ux(86f), uy(205f)).size(ux(934f), uy(90f))
         )
         LibraryTabs(
             selected = selectedTab,
             onSelected = { selectedTab = it },
             scale = scale,
-            modifier = Modifier.offset(ux(86f), uy(363f)).size(ux(934f), uy(76f))
+            modifier = Modifier.offset(ux(86f), uy(328f)).size(ux(934f), uy(76f))
         )
 
         if (selectedTab == LibraryTab.TRACKS) {
@@ -145,9 +145,9 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                 count = if (query.isBlank() && initialTracks.size == 12) 328 else visibleTracks.size,
                 scale = scale,
                 onSort = { descending = !descending },
-                modifier = Modifier.offset(ux(86f), uy(500f)).size(ux(921f), uy(62f))
+                modifier = Modifier.offset(ux(86f), uy(465f)).size(ux(921f), uy(62f))
             )
-            val listTop = uy(570f)
+            val listTop = uy(535f)
             LazyColumn(
                 modifier = Modifier
                     .offset(x = ux(86f), y = listTop)
@@ -239,7 +239,7 @@ private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: 
     fun u(value: Float) = (value * scale).dp
     Box(Modifier.fillMaxSize()) {
         Box(
-            Modifier.offset(u(72f), u(94f)).size(u(72f)).semantics { contentDescription = "Voltar" }.clickable(onClick = onBack),
+            Modifier.offset(u(72f), u(60f)).size(u(72f)).semantics { contentDescription = "Voltar" }.clickable(onClick = onBack),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = JukeWhite, modifier = Modifier.size(u(55f)))
@@ -247,8 +247,8 @@ private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: 
         Row(
             Modifier
                 .align(Alignment.TopCenter)
-                .offset(y = u(76f))
-                .size(u(310f), u(102f)),
+                .offset(y = u(42f))
+                .height(u(102f)),
             verticalAlignment = Alignment.Top
         ) {
             WaveformLogo(scale)
@@ -258,7 +258,7 @@ private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: 
             }
         }
         Box(
-            Modifier.offset(u(948f), u(94f)).size(u(65f)).semantics { contentDescription = "Mais opções" }.clickable(onClick = onMenu),
+            Modifier.offset(u(948f), u(60f)).size(u(65f)).semantics { contentDescription = "Mais opções" }.clickable(onClick = onMenu),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Default.MoreVert, null, tint = JukeWhite, modifier = Modifier.size(u(46f)))
