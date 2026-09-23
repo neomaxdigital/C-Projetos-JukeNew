@@ -153,7 +153,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                     .offset(x = ux(86f), y = listTop)
                     .size(width = ux(921f), height = (miniPlayerTop - listTop - 8.dp).coerceAtLeast(0.dp)),
                 contentPadding = PaddingValues(bottom = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(uy(18f))
+                verticalArrangement = Arrangement.spacedBy(uy(10f))
             ) {
                 items(visibleTracks, key = { it.id }) { track ->
                     TrackRow(
@@ -418,17 +418,17 @@ private fun MiniPlayer(
             crop = track.artworkCrop,
             fallback = track.artworkFallback,
             cornerRadius = 9f,
-            modifier = Modifier.size(50.dp)
+            modifier = Modifier.size(46.dp)
         )
         Column(
             Modifier
-                .padding(start = 12.dp, end = 8.dp)
+                .padding(start = 10.dp, end = 6.dp)
                 .weight(1f)
         ) {
             Text(
                 track.title,
                 color = JukeWhite,
-                fontSize = maxOf(13f, 32f * scale).sp,
+                fontSize = maxOf(12f, 30f * scale).sp,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -436,25 +436,25 @@ private fun MiniPlayer(
             Text(
                 track.artist,
                 color = JukeMuted,
-                fontSize = maxOf(11f, 28f * scale).sp,
+                fontSize = maxOf(10.5f, 26f * scale).sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
         Row(
-            modifier = Modifier.width(154.dp),
+            modifier = Modifier.width(126.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", 42.dp, 27.dp, onPrevious)
+            MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", 38.dp, 24.dp, onPrevious)
             MiniPlayerButton(
                 if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
                 if (playing) "Pausar" else "Tocar",
-                48.dp,
-                30.dp,
+                42.dp,
+                27.dp,
                 onToggle
             )
-            MiniPlayerButton(Icons.Default.SkipNext, "Próxima", 42.dp, 27.dp, onNext)
+            MiniPlayerButton(Icons.Default.SkipNext, "Próxima", 38.dp, 24.dp, onNext)
         }
     }
 }
