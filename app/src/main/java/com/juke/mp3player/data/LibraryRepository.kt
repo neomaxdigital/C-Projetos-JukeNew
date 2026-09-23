@@ -1,6 +1,7 @@
 package com.juke.mp3player.data
 
 import com.juke.mp3player.music.ArtworkCrop
+import com.juke.mp3player.music.ArtworkFallback
 import com.juke.mp3player.music.Track
 
 interface LibraryRepository {
@@ -17,9 +18,9 @@ class MockLibraryRepository : LibraryRepository {
         Track(6, "Better Days", "Sunny Vibes", "3:44", ArtworkCrop(76, 1123, 128, 108)),
         Track(7, "Road Trip", "The Nomads", "4:01", ArtworkCrop(76, 1252, 128, 108)),
         Track(8, "Acústico", "Som da Vida", "3:17", ArtworkCrop(76, 1381, 128, 108)),
-        Track(9, "Noites Tranquilas", "Luar & Sol", "3:58", ArtworkCrop(76, 1509, 128, 108)),
-        Track(10, "Natureza", "Pure Dream", "4:36", ArtworkCrop(76, 1637, 128, 108)),
-        Track(11, "Eletrônica", "Pulse Wave", "3:29", ArtworkCrop(76, 1765, 128, 108)),
-        Track(12, "City Lights", "Veltra", "3:59", ArtworkCrop(76, 1893, 128, 108))
+        Track(9, "Noites Tranquilas", "Luar & Sol", "3:58", artworkFallback = ArtworkFallback.NIGHT_SKY),
+        Track(10, "Natureza", "Pure Dream", "4:36", artworkFallback = ArtworkFallback.NATURE),
+        Track(11, "Eletrônica", "Pulse Wave", "3:29", artworkFallback = ArtworkFallback.CONCERT),
+        Track(12, "City Lights", "Veltra", "3:59", artworkFallback = ArtworkFallback.CITY)
     )
 }
