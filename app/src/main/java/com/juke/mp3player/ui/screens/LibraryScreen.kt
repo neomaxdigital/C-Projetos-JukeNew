@@ -7,8 +7,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -69,6 +76,7 @@ private enum class LibraryTab(val label: String) {
     TRACKS("Faixas"), ARTISTS("Artistas"), ALBUMS("Álbuns"), PLAYLISTS("Playlists"), FOLDERS("Pastas")
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
     var query by remember { mutableStateOf("") }
@@ -92,6 +100,11 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
         val scale = minOf(xScale, yScale)
         fun ux(value: Float): Dp = (value * xScale).dp
         fun uy(value: Float): Dp = (value * yScale).dp
+        val navigationBarInset = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues().calculateBottomPadding()
+        val miniPlayerBottom = maxOf(uy(39f), navigationBarInset + 8.dp)
+        val miniPlayerHeight = maxOf(uy(157f), 64.dp)
+        val miniPlayerSide = maxOf(ux(48f), 16.dp)
+        val miniPlayerTop = maxHeight - miniPlayerBottom - miniPlayerHeight
 
         JukeCurvedBackground()
         Header(
@@ -122,11 +135,11 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                 modifier = Modifier.offset(ux(86f), uy(500f)).size(ux(921f), uy(62f))
             )
             val listTop = uy(570f)
-            val miniTop = uy(2204f)
             LazyColumn(
                 modifier = Modifier
                     .offset(x = ux(86f), y = listTop)
-                    .size(width = ux(921f), height = (miniTop - listTop - uy(20f)).coerceAtLeast(0.dp)),
+                    .size(width = ux(921f), height = (miniPlayerTop - listTop - 8.dp).coerceAtLeast(0.dp)),
+                contentPadding = PaddingValues(bottom = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(uy(18f))
             ) {
                 items(visibleTracks, key = { it.id }) { track ->
@@ -162,8 +175,8 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                 onToggle = { playing = !playing },
                 onNext = { currentIndex = if (currentIndex >= initialTracks.lastIndex) 0 else currentIndex + 1 },
                 modifier = Modifier
-                    .offset(x = ux(48f), y = uy(2204f))
-                    .size(width = ux(984f), height = uy(157f))
+                    .offset(x = miniPlayerSide, y = miniPlayerTop)
+                    .size(width = maxWidth - miniPlayerSide * 2, height = miniPlayerHeight)
                     .zIndex(2f)
             )
         }
@@ -379,33 +392,54 @@ private fun MiniPlayer(
     onNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape((38f * scale).dp)
-    Box(modifier.clip(shape).background(Color(0xE612171A)).border((1.5f * scale).dp, Color(0xFF5B6268), shape)) {
+    val shape = RoundedCornerShape(maxOf((38f * scale).dp, 18.dp))
+    Row(
+        modifier
+            .clip(shape)
+            .background(Color(0xE612171A))
+            .border(maxOf((1.5f * scale).dp, 1.dp), Color(0xFF5B6268), shape)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         ApprovedArtwork(
             crop = track.artworkCrop,
             fallback = track.artworkFallback,
-            cornerRadius = 13f * scale,
-            modifier = Modifier.offset((28f * scale).dp, (23f * scale).dp).size((106f * scale).dp)
+            cornerRadius = 8f,
+            modifier = Modifier.size(48.dp)
         )
-        Text(
-            track.title,
-            color = JukeWhite,
-            fontSize = (32f * scale).sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.offset((177f * scale).dp, (36f * scale).dp).width((475f * scale).dp)
-        )
-        Text(
-            track.artist,
-            color = JukeMuted,
-            fontSize = (28f * scale).sp,
-            maxLines = 1,
-            modifier = Modifier.offset((177f * scale).dp, (88f * scale).dp).width((475f * scale).dp)
-        )
-        MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", 690f, scale, onPrevious)
-        MiniPlayerButton(if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, if (playing) "Pausar" else "Tocar", 805f, scale, onToggle)
-        MiniPlayerButton(Icons.Default.SkipNext, "Próxima", 920f, scale, onNext)
+        Column(
+            Modifier
+                .padding(start = 10.dp, end = 4.dp)
+                .weight(1f)
+        ) {
+            Text(
+                track.title,
+                color = JukeWhite,
+                fontSize = maxOf(13f, 32f * scale).sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                track.artist,
+                color = JukeMuted,
+                fontSize = maxOf(11f, 28f * scale).sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", onPrevious)
+            MiniPlayerButton(
+                if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
+                if (playing) "Pausar" else "Tocar",
+                onToggle
+            )
+            MiniPlayerButton(Icons.Default.SkipNext, "Próxima", onNext)
+        }
     }
 }
 
@@ -413,15 +447,15 @@ private fun MiniPlayer(
 private fun MiniPlayerButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
-    x: Float,
-    scale: Float,
     onClick: () -> Unit
 ) {
     Box(
-        Modifier.offset((x * scale).dp, (45f * scale).dp).size((68f * scale).dp)
-            .semantics { contentDescription = label }.clickable(onClick = onClick),
+        Modifier
+            .size(42.dp)
+            .semantics { contentDescription = label }
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Icon(icon, null, tint = JukeWhite, modifier = Modifier.size((53f * scale).dp))
+        Icon(icon, null, tint = JukeWhite, modifier = Modifier.size(26.dp))
     }
 }
