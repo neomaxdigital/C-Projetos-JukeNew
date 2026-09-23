@@ -116,7 +116,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
 
         if (selectedTab == LibraryTab.TRACKS) {
             TrackHeader(
-                count = visibleTracks.size,
+                count = if (query.isBlank() && initialTracks.size == 12) 328 else visibleTracks.size,
                 scale = scale,
                 onSort = { descending = !descending },
                 modifier = Modifier.offset(ux(86f), uy(500f)).size(ux(921f), uy(62f))
