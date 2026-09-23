@@ -336,7 +336,7 @@ private fun TrackRow(
     scale: Float
 ) {
     Box(Modifier.size(width = (921f * scale).dp, height = (118f * scale).dp).clickable(onClick = onClick)) {
-        ApprovedArtwork(crop = track.artworkCrop, cornerRadius = 14f * scale, modifier = Modifier.size((118f * scale).dp))
+        ApprovedArtwork(crop = track.artworkCrop, fallback = track.artworkFallback, cornerRadius = 14f * scale, modifier = Modifier.size((118f * scale).dp))
         Text(
             track.title,
             color = JukeWhite,
@@ -383,6 +383,7 @@ private fun MiniPlayer(
     Box(modifier.clip(shape).background(Color(0xE612171A)).border((1.5f * scale).dp, Color(0xFF5B6268), shape)) {
         ApprovedArtwork(
             crop = track.artworkCrop,
+            fallback = track.artworkFallback,
             cornerRadius = 13f * scale,
             modifier = Modifier.offset((28f * scale).dp, (23f * scale).dp).size((106f * scale).dp)
         )
