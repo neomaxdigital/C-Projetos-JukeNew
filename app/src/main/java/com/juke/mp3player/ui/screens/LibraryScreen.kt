@@ -244,7 +244,13 @@ private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: 
         ) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = JukeWhite, modifier = Modifier.size(u(55f)))
         }
-        Row(Modifier.offset(u(406f), u(76f)).size(u(310f), u(102f)), verticalAlignment = Alignment.Top) {
+        Row(
+            Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = u(76f))
+                .size(u(310f), u(102f)),
+            verticalAlignment = Alignment.Top
+        ) {
             WaveformLogo(scale)
             Box(Modifier.padding(start = u(22f))) {
                 Text("Juke", color = JukeWhite, fontWeight = FontWeight.Bold, fontSize = u(62f).value.sp)
