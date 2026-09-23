@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
+import androidx.compose.foundation.layout.statusBarsIgnoringVisibility
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -95,19 +96,29 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
     val currentTrack = initialTracks.getOrNull(currentIndex)
 
     BoxWithConstraints(Modifier.fillMaxSize().background(JukeBlack)) {
-        val xScale = maxWidth.value / DESIGN_WIDTH
-        val yScale = maxHeight.value / DESIGN_HEIGHT
-        val scale = minOf(xScale, yScale)
-        fun ux(value: Float): Dp = (value * xScale).dp
-        fun uy(value: Float): Dp = (value * yScale).dp
+        val statusBarInset = WindowInsets.statusBarsIgnoringVisibility.asPaddingValues().calculateTopPadding()
         val navigationBarInset = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues().calculateBottomPadding()
-        val miniPlayerBottom = maxOf(uy(39f), navigationBarInset + 8.dp)
-        val miniPlayerHeight = maxOf(uy(157f), 64.dp)
-        val miniPlayerSide = maxOf(ux(48f), 16.dp)
-        val miniPlayerTop = maxHeight - miniPlayerBottom - miniPlayerHeight
+        val safeHeight = (maxHeight - statusBarInset - navigationBarInset).coerceAtLeast(1.dp)
 
         JukeCurvedBackground()
-        Header(
+
+        Box(
+            Modifier
+                .offset(y = statusBarInset)
+                .size(width = maxWidth, height = safeHeight)
+        ) {
+            val xScale = maxWidth.value / DESIGN_WIDTH
+            val yScale = safeHeight.value / DESIGN_HEIGHT
+            val scale = minOf(xScale, yScale)
+            fun ux(value: Float): Dp = (value * xScale).dp
+            fun uy(value: Float): Dp = (value * yScale).dp
+
+            val miniPlayerBottom = maxOf(uy(39f), 10.dp)
+            val miniPlayerHeight = maxOf(uy(157f), 72.dp)
+            val miniPlayerSide = maxOf(ux(48f), 16.dp)
+            val miniPlayerTop = safeHeight - miniPlayerBottom - miniPlayerHeight
+
+            Header(
             scale = scale,
             onBack = onBack,
             menuOpen = topMenuOpen,
@@ -180,7 +191,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                     .zIndex(2f)
             )
         }
-
+        }
     }
 }
 
@@ -398,18 +409,18 @@ private fun MiniPlayer(
             .clip(shape)
             .background(Color(0xE612171A))
             .border(maxOf((1.5f * scale).dp, 1.dp), Color(0xFF5B6268), shape)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+            .padding(start = 12.dp, end = 12.dp, top = 9.dp, bottom = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ApprovedArtwork(
             crop = track.artworkCrop,
             fallback = track.artworkFallback,
-            cornerRadius = 8f,
-            modifier = Modifier.size(48.dp)
+            cornerRadius = 9f,
+            modifier = Modifier.size(50.dp)
         )
         Column(
             Modifier
-                .padding(start = 10.dp, end = 4.dp)
+                .padding(start = 12.dp, end = 8.dp)
                 .weight(1f)
         ) {
             Text(
@@ -429,16 +440,19 @@ private fun MiniPlayer(
             )
         }
         Row(
+            modifier = Modifier.width(154.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", onPrevious)
+            MiniPlayerButton(Icons.Default.SkipPrevious, "Anterior", 42.dp, 27.dp, onPrevious)
             MiniPlayerButton(
                 if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
                 if (playing) "Pausar" else "Tocar",
+                48.dp,
+                30.dp,
                 onToggle
             )
-            MiniPlayerButton(Icons.Default.SkipNext, "Próxima", onNext)
+            MiniPlayerButton(Icons.Default.SkipNext, "Próxima", 42.dp, 27.dp, onNext)
         }
     }
 }
@@ -447,15 +461,17 @@ private fun MiniPlayer(
 private fun MiniPlayerButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
+    touchSize: Dp,
+    iconSize: Dp,
     onClick: () -> Unit
 ) {
     Box(
         Modifier
-            .size(42.dp)
+            .size(touchSize)
             .semantics { contentDescription = label }
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Icon(icon, null, tint = JukeWhite, modifier = Modifier.size(26.dp))
+        Icon(icon, null, tint = JukeWhite, modifier = Modifier.size(iconSize))
     }
 }
