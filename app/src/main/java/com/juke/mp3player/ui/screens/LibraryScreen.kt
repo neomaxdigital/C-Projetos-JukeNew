@@ -96,18 +96,20 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
     val currentTrack = initialTracks.getOrNull(currentIndex)
 
     BoxWithConstraints(Modifier.fillMaxSize().background(JukeBlack)) {
+        val screenWidth = maxWidth
+        val screenHeight = maxHeight
         val statusBarInset = WindowInsets.statusBarsIgnoringVisibility.asPaddingValues().calculateTopPadding()
         val navigationBarInset = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues().calculateBottomPadding()
-        val safeHeight = (maxHeight - statusBarInset - navigationBarInset).coerceAtLeast(1.dp)
+        val safeHeight = (screenHeight - statusBarInset - navigationBarInset).coerceAtLeast(1.dp)
 
         JukeCurvedBackground()
 
         Box(
             Modifier
                 .offset(y = statusBarInset)
-                .size(width = maxWidth, height = safeHeight)
+                .size(width = screenWidth, height = safeHeight)
         ) {
-            val xScale = maxWidth.value / DESIGN_WIDTH
+            val xScale = screenWidth.value / DESIGN_WIDTH
             val yScale = safeHeight.value / DESIGN_HEIGHT
             val scale = minOf(xScale, yScale)
             fun ux(value: Float): Dp = (value * xScale).dp
@@ -187,7 +189,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                 onNext = { currentIndex = if (currentIndex >= initialTracks.lastIndex) 0 else currentIndex + 1 },
                 modifier = Modifier
                     .offset(x = miniPlayerSide, y = miniPlayerTop)
-                    .size(width = maxWidth - miniPlayerSide * 2, height = miniPlayerHeight)
+                    .size(width = screenWidth - miniPlayerSide * 2, height = miniPlayerHeight)
                     .zIndex(2f)
             )
         }
