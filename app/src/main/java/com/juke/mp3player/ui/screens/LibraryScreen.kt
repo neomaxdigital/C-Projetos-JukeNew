@@ -201,15 +201,32 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
 private fun JukeCurvedBackground() {
     Canvas(Modifier.fillMaxSize()) {
         drawRect(Color(0xFF090D10))
+        // Soft upper ribbons: intentionally broad and low-contrast so the
+        // branding sits on a calm surface instead of inside a dark oval.
         drawPath(Path().apply {
-            moveTo(0f, 0f); lineTo(size.width * .43f, 0f)
-            cubicTo(size.width * .34f, size.height * .07f, size.width * .17f, size.height * .10f, 0f, size.height * .16f)
+            moveTo(0f, 0f)
+            lineTo(size.width * .34f, 0f)
+            cubicTo(
+                size.width * .30f, size.height * .035f,
+                size.width * .18f, size.height * .070f,
+                0f, size.height * .115f
+            )
             close()
-        }, Color(0xFF141A1E))
+        }, Color(0xFF12171B))
         drawPath(Path().apply {
-            moveTo(size.width * .29f, 0f); lineTo(size.width, 0f); lineTo(size.width, size.height * .08f)
-            cubicTo(size.width * .78f, size.height * .15f, size.width * .57f, size.height * .14f, size.width * .34f, size.height * .10f)
-            cubicTo(size.width * .24f, size.height * .08f, size.width * .22f, size.height * .04f, size.width * .29f, 0f)
+            moveTo(size.width * .50f, 0f)
+            lineTo(size.width, 0f)
+            lineTo(size.width, size.height * .105f)
+            cubicTo(
+                size.width * .83f, size.height * .125f,
+                size.width * .67f, size.height * .115f,
+                size.width * .52f, size.height * .085f
+            )
+            cubicTo(
+                size.width * .46f, size.height * .065f,
+                size.width * .45f, size.height * .028f,
+                size.width * .50f, 0f
+            )
             close()
         }, Color(0xFF0C1114))
         drawPath(Path().apply {
