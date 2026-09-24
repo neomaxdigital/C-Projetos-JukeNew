@@ -79,7 +79,15 @@ private enum class LibraryTab(val label: String) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
+fun LibraryScreen(
+    initialTracks: List<Track>,
+    onBack: () -> Unit,
+    onNowPlaying: () -> Unit,
+    onPlaylists: () -> Unit,
+    onEqualizer: () -> Unit,
+    onQueue: () -> Unit,
+    onSettings: () -> Unit
+) {
     var query by remember { mutableStateOf("") }
     var selectedTab by remember { mutableStateOf(LibraryTab.TRACKS) }
     var descending by remember { mutableStateOf(false) }
@@ -125,7 +133,10 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
             onBack = onBack,
             menuOpen = topMenuOpen,
             onMenu = { topMenuOpen = true },
-            onDismissMenu = { topMenuOpen = false }
+            onDismissMenu = { topMenuOpen = false },
+            onQueue = onQueue,
+            onEqualizer = onEqualizer,
+            onSettings = onSettings
         )
         SearchField(
             query = query,
@@ -135,7 +146,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
         )
         LibraryTabs(
             selected = selectedTab,
-            onSelected = { selectedTab = it },
+            onSelected = { if (it == LibraryTab.PLAYLISTS) onPlaylists() else selectedTab = it },
             scale = scale,
             modifier = Modifier.offset(ux(86f), uy(328f)).size(ux(934f), uy(76f))
         )
@@ -187,6 +198,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
                 onPrevious = { currentIndex = if (currentIndex <= 0) initialTracks.lastIndex else currentIndex - 1 },
                 onToggle = { playing = !playing },
                 onNext = { currentIndex = if (currentIndex >= initialTracks.lastIndex) 0 else currentIndex + 1 },
+                onOpen = onNowPlaying,
                 modifier = Modifier
                     .offset(x = miniPlayerSide, y = miniPlayerTop)
                     .size(width = screenWidth - miniPlayerSide * 2, height = miniPlayerHeight)
@@ -198,7 +210,16 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
 }
 
 @Composable
-private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: () -> Unit, onDismissMenu: () -> Unit) {
+private fun Header(
+    scale: Float,
+    onBack: () -> Unit,
+    menuOpen: Boolean,
+    onMenu: () -> Unit,
+    onDismissMenu: () -> Unit,
+    onQueue: () -> Unit,
+    onEqualizer: () -> Unit,
+    onSettings: () -> Unit
+) {
     fun u(value: Float) = (value * scale).dp
     Box(Modifier.fillMaxSize()) {
         Box(
@@ -226,9 +247,9 @@ private fun Header(scale: Float, onBack: () -> Unit, menuOpen: Boolean, onMenu: 
         ) {
             Icon(Icons.Default.MoreVert, null, tint = JukeWhite, modifier = Modifier.size(u(46f)))
             DropdownMenu(expanded = menuOpen, onDismissRequest = onDismissMenu, containerColor = JukeGraphite) {
-                DropdownMenuItem(text = { Text("Fila de reprodução") }, onClick = onDismissMenu)
-                DropdownMenuItem(text = { Text("Equalizador") }, onClick = onDismissMenu)
-                DropdownMenuItem(text = { Text("Configurações") }, onClick = onDismissMenu)
+                DropdownMenuItem(text = { Text("Fila de reprodução") }, onClick = { onDismissMenu(); onQueue() })
+                DropdownMenuItem(text = { Text("Equalizador") }, onClick = { onDismissMenu(); onEqualizer() })
+                DropdownMenuItem(text = { Text("Configurações") }, onClick = { onDismissMenu(); onSettings() })
             }
         }
     }
@@ -372,12 +393,14 @@ private fun MiniPlayer(
     onPrevious: () -> Unit,
     onToggle: () -> Unit,
     onNext: () -> Unit,
+    onOpen: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(maxOf((38f * scale).dp, 18.dp))
     Row(
         modifier
             .clip(shape)
+            .clickable(onClick = onOpen)
             .background(Color(0xE612171A))
             .border(maxOf((1.5f * scale).dp, 1.dp), Color(0xFF5B6268), shape)
             .padding(start = 12.dp, end = 12.dp, top = 9.dp, bottom = 9.dp),
