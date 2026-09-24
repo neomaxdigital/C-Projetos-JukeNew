@@ -28,7 +28,8 @@ fun ApprovedArtwork(
     modifier: Modifier = Modifier,
     cornerRadius: Float = 16f
 ) {
-    val approvedLayout = ImageBitmap.imageResource(R.drawable.juke_layout_library)
+    // The final approved Library reference is now the canonical crop source.
+    val approvedLayout = ImageBitmap.imageResource(R.drawable.reference_library_final)
     val shape = remember(cornerRadius) { RoundedCornerShape(cornerRadius.dp) }
 
     Canvas(

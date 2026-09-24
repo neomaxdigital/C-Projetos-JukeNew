@@ -9,163 +9,166 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 
 /**
- * Shared JUKE background used by every screen.
+ * Shared JUKE background.
  *
- * This deliberately stays independent from screen layout so changing the
- * wallpaper never changes paddings, positions, lists or player controls.
+ * The geometry is normalized to the approved 1080x2400 reference so every
+ * screen gets the same wallpaper while remaining independent from UI layout.
  */
 @Composable
 fun JukeAppBackground(modifier: Modifier = Modifier) {
     Canvas(modifier) {
-        drawRect(Color(0xFF071014))
+        drawRect(Color(0xFF050C10))
 
-        fun ribbon(
-            path: Path,
-            start: Color,
-            end: Color,
-            startY: Float,
-            endY: Float
-        ) {
+        fun ribbon(path: Path, start: Color, end: Color, start: Offset, endPoint: Offset) {
             drawPath(
                 path = path,
                 brush = Brush.linearGradient(
                     colors = listOf(start, end),
-                    start = Offset(0f, size.height * startY),
-                    end = Offset(size.width, size.height * endY)
+                    start = start,
+                    end = endPoint
                 )
             )
         }
 
-        // Upper-left charcoal ribbon.
+        // Upper-left sweep.
         ribbon(
             Path().apply {
                 moveTo(0f, 0f)
-                lineTo(size.width * 0.44f, 0f)
+                lineTo(size.width * .47f, 0f)
                 cubicTo(
-                    size.width * 0.36f, size.height * 0.040f,
-                    size.width * 0.18f, size.height * 0.090f,
-                    0f, size.height * 0.145f
+                    size.width * .39f, size.height * .045f,
+                    size.width * .22f, size.height * .105f,
+                    0f, size.height * .145f
                 )
                 close()
             },
-            Color(0xFF1A252C),
-            Color(0xFF0E171C),
-            0f,
-            0.16f
+            Color(0xFF18242B),
+            Color(0xFF0A1116),
+            Offset(0f, 0f),
+            Offset(size.width * .38f, size.height * .15f)
         )
 
-        // Upper-right ribbon; broad and shallow so the header remains calm.
+        // Upper-right sweep.
         ribbon(
             Path().apply {
-                moveTo(size.width * 0.60f, 0f)
-                lineTo(size.width, 0f)
-                lineTo(size.width, size.height * 0.115f)
+                moveTo(size.width * .46f, size.height * .22f)
                 cubicTo(
-                    size.width * 0.85f, size.height * 0.145f,
-                    size.width * 0.70f, size.height * 0.155f,
-                    size.width * 0.52f, size.height * 0.195f
+                    size.width * .62f, size.height * .18f,
+                    size.width * .78f, size.height * .095f,
+                    size.width, size.height * .055f
+                )
+                lineTo(size.width, size.height * .165f)
+                cubicTo(
+                    size.width * .82f, size.height * .205f,
+                    size.width * .66f, size.height * .25f,
+                    size.width * .52f, size.height * .29f
                 )
                 cubicTo(
-                    size.width * 0.45f, size.height * 0.210f,
-                    size.width * 0.46f, size.height * 0.090f,
-                    size.width * 0.60f, 0f
+                    size.width * .46f, size.height * .30f,
+                    size.width * .43f, size.height * .275f,
+                    size.width * .46f, size.height * .22f
                 )
                 close()
             },
-            Color(0xFF172630),
-            Color(0xFF0A1217),
-            0.02f,
-            0.22f
+            Color(0xFF13222B),
+            Color(0xFF071015),
+            Offset(size.width, size.height * .06f),
+            Offset(size.width * .48f, size.height * .28f)
         )
 
-        // Wide center ribbon.
+        // Broad center sweep, matching the approved library reference.
         ribbon(
             Path().apply {
-                moveTo(0f, size.height * 0.33f)
+                moveTo(0f, size.height * .255f)
                 cubicTo(
-                    size.width * 0.16f, size.height * 0.25f,
-                    size.width * 0.44f, size.height * 0.24f,
-                    size.width * 0.66f, size.height * 0.20f
+                    size.width * .20f, size.height * .22f,
+                    size.width * .40f, size.height * .22f,
+                    size.width * .58f, size.height * .27f
                 )
                 cubicTo(
-                    size.width * 0.83f, size.height * 0.17f,
-                    size.width * 0.94f, size.height * 0.14f,
-                    size.width, size.height * 0.10f
+                    size.width * .76f, size.height * .32f,
+                    size.width * .90f, size.height * .39f,
+                    size.width, size.height * .445f
                 )
-                lineTo(size.width, size.height * 0.43f)
+                lineTo(size.width, size.height * .565f)
                 cubicTo(
-                    size.width * 0.83f, size.height * 0.50f,
-                    size.width * 0.57f, size.height * 0.50f,
-                    size.width * 0.31f, size.height * 0.55f
-                )
-                cubicTo(
-                    size.width * 0.16f, size.height * 0.58f,
-                    size.width * 0.06f, size.height * 0.62f,
-                    0f, size.height * 0.66f
-                )
-                close()
-            },
-            Color(0xFF1B2A34),
-            Color(0xFF0B1419),
-            0.18f,
-            0.62f
-        )
-
-        // Lower diagonal ribbon.
-        ribbon(
-            Path().apply {
-                moveTo(0f, size.height * 0.69f)
-                cubicTo(
-                    size.width * 0.16f, size.height * 0.62f,
-                    size.width * 0.35f, size.height * 0.59f,
-                    size.width * 0.53f, size.height * 0.54f
+                    size.width * .84f, size.height * .52f,
+                    size.width * .67f, size.height * .47f,
+                    size.width * .49f, size.height * .43f
                 )
                 cubicTo(
-                    size.width * 0.72f, size.height * 0.49f,
-                    size.width * 0.89f, size.height * 0.45f,
-                    size.width, size.height * 0.40f
-                )
-                lineTo(size.width, size.height * 0.72f)
-                cubicTo(
-                    size.width * 0.83f, size.height * 0.77f,
-                    size.width * 0.65f, size.height * 0.80f,
-                    size.width * 0.47f, size.height * 0.86f
-                )
-                cubicTo(
-                    size.width * 0.27f, size.height * 0.92f,
-                    size.width * 0.12f, size.height * 0.95f,
-                    0f, size.height
+                    size.width * .29f, size.height * .385f,
+                    size.width * .12f, size.height * .37f,
+                    0f, size.height * .405f
                 )
                 close()
             },
             Color(0xFF172732),
-            Color(0xFF0A1318),
-            0.46f,
-            0.92f
+            Color(0xFF071015),
+            Offset(0f, size.height * .29f),
+            Offset(size.width, size.height * .53f)
         )
 
-        // Bottom-most ribbon for continuity behind the navigation area.
+        // Lower-middle sweep.
         ribbon(
             Path().apply {
-                moveTo(0f, size.height * 0.91f)
+                moveTo(0f, size.height * .635f)
                 cubicTo(
-                    size.width * 0.22f, size.height * 0.84f,
-                    size.width * 0.45f, size.height * 0.82f,
-                    size.width * 0.63f, size.height * 0.78f
+                    size.width * .15f, size.height * .57f,
+                    size.width * .34f, size.height * .535f,
+                    size.width * .53f, size.height * .50f
                 )
                 cubicTo(
-                    size.width * 0.80f, size.height * 0.75f,
-                    size.width * 0.93f, size.height * 0.72f,
-                    size.width, size.height * 0.69f
+                    size.width * .72f, size.height * .465f,
+                    size.width * .89f, size.height * .445f,
+                    size.width, size.height * .405f
                 )
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
+                lineTo(size.width, size.height * .565f)
+                cubicTo(
+                    size.width * .82f, size.height * .625f,
+                    size.width * .64f, size.height * .66f,
+                    size.width * .47f, size.height * .71f
+                )
+                cubicTo(
+                    size.width * .28f, size.height * .765f,
+                    size.width * .12f, size.height * .84f,
+                    0f, size.height * .905f
+                )
                 close()
             },
-            Color(0xFF101D24),
-            Color(0xFF071014),
-            0.74f,
-            1f
+            Color(0xFF15252F),
+            Color(0xFF071015),
+            Offset(0f, size.height * .67f),
+            Offset(size.width, size.height * .47f)
+        )
+
+        // Bottom sweep.
+        ribbon(
+            Path().apply {
+                moveTo(0f, size.height)
+                cubicTo(
+                    size.width * .16f, size.height * .94f,
+                    size.width * .31f, size.height * .86f,
+                    size.width * .45f, size.height * .80f
+                )
+                cubicTo(
+                    size.width * .63f, size.height * .72f,
+                    size.width * .81f, size.height * .69f,
+                    size.width, size.height * .64f
+                )
+                lineTo(size.width, size.height * .80f)
+                cubicTo(
+                    size.width * .82f, size.height * .84f,
+                    size.width * .66f, size.height * .88f,
+                    size.width * .52f, size.height * .94f
+                )
+                lineTo(size.width * .40f, size.height)
+                close()
+            },
+            Color(0xFF172833),
+            Color(0xFF071015),
+            Offset(0f, size.height),
+            Offset(size.width, size.height * .67f)
         )
     }
 }
