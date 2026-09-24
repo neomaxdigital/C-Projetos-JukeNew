@@ -49,7 +49,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -64,6 +63,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.juke.mp3player.music.Track
 import com.juke.mp3player.ui.components.ApprovedArtwork
+import com.juke.mp3player.ui.components.JukeAppBackground
 import com.juke.mp3player.ui.theme.JukeBlack
 import com.juke.mp3player.ui.theme.JukeGraphite
 import com.juke.mp3player.ui.theme.JukeMuted
@@ -102,7 +102,7 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
         val navigationBarInset = WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues().calculateBottomPadding()
         val safeHeight = (screenHeight - statusBarInset - navigationBarInset).coerceAtLeast(1.dp)
 
-        JukeCurvedBackground()
+        JukeAppBackground(Modifier.fillMaxSize())
 
         Box(
             Modifier
@@ -194,60 +194,6 @@ fun LibraryScreen(initialTracks: List<Track>, onBack: () -> Unit) {
             )
         }
         }
-    }
-}
-
-@Composable
-private fun JukeCurvedBackground() {
-    Canvas(Modifier.fillMaxSize()) {
-        drawRect(Color(0xFF090D10))
-        // Soft upper ribbons: intentionally broad and low-contrast so the
-        // branding sits on a calm surface instead of inside a dark oval.
-        drawPath(Path().apply {
-            moveTo(0f, 0f)
-            lineTo(size.width * .34f, 0f)
-            cubicTo(
-                size.width * .30f, size.height * .035f,
-                size.width * .18f, size.height * .070f,
-                0f, size.height * .115f
-            )
-            close()
-        }, Color(0xFF12171B))
-        drawPath(Path().apply {
-            moveTo(size.width * .50f, 0f)
-            lineTo(size.width, 0f)
-            lineTo(size.width, size.height * .105f)
-            cubicTo(
-                size.width * .83f, size.height * .125f,
-                size.width * .67f, size.height * .115f,
-                size.width * .52f, size.height * .085f
-            )
-            cubicTo(
-                size.width * .46f, size.height * .065f,
-                size.width * .45f, size.height * .028f,
-                size.width * .50f, 0f
-            )
-            close()
-        }, Color(0xFF0C1114))
-        drawPath(Path().apply {
-            moveTo(0f, size.height * .35f)
-            cubicTo(size.width * .26f, size.height * .21f, size.width * .62f, size.height * .28f, size.width, size.height * .17f)
-            lineTo(size.width, size.height * .31f)
-            cubicTo(size.width * .72f, size.height * .47f, size.width * .28f, size.height * .42f, 0f, size.height * .54f)
-            close()
-        }, Color(0xFF0B1013))
-        drawPath(Path().apply {
-            moveTo(0f, size.height * .58f)
-            cubicTo(size.width * .24f, size.height * .49f, size.width * .56f, size.height * .61f, size.width, size.height * .46f)
-            lineTo(size.width, size.height * .72f)
-            cubicTo(size.width * .72f, size.height * .82f, size.width * .31f, size.height * .70f, 0f, size.height * .79f)
-            close()
-        }, Color(0xFF11161A))
-        drawPath(Path().apply {
-            moveTo(0f, size.height * .86f)
-            cubicTo(size.width * .27f, size.height * .74f, size.width * .64f, size.height * .91f, size.width, size.height * .77f)
-            lineTo(size.width, size.height); lineTo(0f, size.height); close()
-        }, Color(0xFF0B1013))
     }
 }
 
