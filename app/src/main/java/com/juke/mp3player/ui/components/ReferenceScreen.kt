@@ -23,14 +23,18 @@ fun ReferenceScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        val screenWidthDp = maxWidth.value
+        val screenHeightDp = maxHeight.value
+
         Image(
             painter = painterResource(drawableRes),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
+
         Box(Modifier.fillMaxSize()) {
-            overlay(maxWidth.value, maxHeight.value)
+            overlay(screenWidthDp, screenHeightDp)
         }
     }
 }
