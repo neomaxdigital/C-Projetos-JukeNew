@@ -1,5 +1,6 @@
 package com.juke.mp3player.ui.screens
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -9,6 +10,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import com.juke.mp3player.R
 import com.juke.mp3player.music.Track
@@ -29,6 +33,24 @@ fun LibraryScreen(
     onSettings: () -> Unit
 ) {
     var menuOpen by remember { mutableStateOf(false) }
+    val view = LocalView.current
+
+    DisposableEffect(view) {
+        val window = (view.context as? Activity)?.window
+        val previousNavigationBarColor = window?.navigationBarColor
+        val previousStatusBarColor = window?.statusBarColor
+        val previousNavigationBarContrast = window?.isNavigationBarContrastEnforced
+
+        window?.navigationBarColor = Color.Transparent.toArgb()
+        window?.statusBarColor = Color.Transparent.toArgb()
+        window?.isNavigationBarContrastEnforced = false
+
+        onDispose {
+            previousNavigationBarColor?.let { window.navigationBarColor = it }
+            previousStatusBarColor?.let { window.statusBarColor = it }
+            previousNavigationBarContrast?.let { window.isNavigationBarContrastEnforced = it }
+        }
+    }
 
     ReferenceScreen(R.drawable.reference_library_final) { sw, sh ->
         Box(Modifier.hotspot(20f, 25f, 110f, 130f, sw, sh).clickable(onClick = onBack))
