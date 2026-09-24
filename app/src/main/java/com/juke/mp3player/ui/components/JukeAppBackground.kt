@@ -19,13 +19,13 @@ fun JukeAppBackground(modifier: Modifier = Modifier) {
     Canvas(modifier) {
         drawRect(Color(0xFF050C10))
 
-        fun ribbon(path: Path, start: Color, end: Color, start: Offset, endPoint: Offset) {
+        fun ribbon(path: Path, startColor: Color, endColor: Color, gradientStart: Offset, gradientEnd: Offset) {
             drawPath(
                 path = path,
                 brush = Brush.linearGradient(
-                    colors = listOf(start, end),
-                    start = start,
-                    end = endPoint
+                    colors = listOf(startColor, endColor),
+                    start = gradientStart,
+                    end = gradientEnd
                 )
             )
         }
